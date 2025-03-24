@@ -17,10 +17,19 @@ const db = getFirestore(app);
 
 // Function to fetch Forex signals
 export async function getSignals() {
-    const querySnapshot = await getDocs(collection(db, "signals"));
+    const querySnapshot = await getDocs(collection(db, "forex-signal"));
     let signals = [];
+
     querySnapshot.forEach((doc) => {
-        signals.push(doc.data());
+        let data = doc.data();
+
+        // Convert Firestore Timestamp to a readable date
+        if (data.timestamp) {
+            data.timestamp = data.timestamp.toDate().toLocaleString();
+        }
+
+        signals.push(data);
     });
+
     return signals;
 }
